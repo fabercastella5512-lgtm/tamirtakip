@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Giriş — Tamir Dükkanı</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:#f5f4f1;min-height:100vh;display:flex;align-items:center;justify-content:center;}
+.card{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:16px;padding:2.5rem 2rem;width:100%;max-width:380px;box-shadow:0 4px 24px rgba(0,0,0,.06);}
+.logo{text-align:center;margin-bottom:2rem;}
+.logo-icon{font-size:36px;display:block;margin-bottom:8px;}
+.logo-title{font-size:20px;font-weight:600;color:#1a7a52;}
+.logo-sub{font-size:13px;color:#a0a09a;margin-top:2px;}
+.form-group{margin-bottom:14px;}
+label{display:block;font-size:11px;color:#6b6b66;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;}
+input{width:100%;padding:10px 12px;border:1px solid rgba(0,0,0,.14);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;background:#f5f4f1;color:#1a1a18;outline:none;transition:border-color .15s;}
+input:focus{border-color:#1a7a52;background:#fff;}
+.btn{width:100%;background:#1a7a52;color:#fff;border:none;border-radius:10px;padding:11px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;margin-top:6px;transition:opacity .15s;}
+.btn:hover{opacity:.88;}
+.error{background:#fcecea;color:#a03020;border:1px solid #f0997b;border-radius:8px;padding:9px 12px;font-size:13px;margin-bottom:12px;display:none;}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">
+    <span class="logo-icon">🔧</span>
+    <div class="logo-title">Tamir Dükkanı</div>
+    <div class="logo-sub">Kayıt Takip Sistemi</div>
+  </div>
+  <div class="error" id="hata"></div>
+  <div class="form-group">
+    <label>Kullanıcı Adı</label>
+    <input type="text" id="username" placeholder="kullaniciadi" autocomplete="username">
+  </div>
+  <div class="form-group">
+    <label>Şifre</label>
+    <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')girisYap()">
+  </div>
+  <button class="btn" onclick="girisYap()">Giriş Yap</button>
+</div>
+<script>
+async function girisYap() {
+  const u = document.getElementById('username').value.trim();
+  const p = document.getElementById('password').value;
+  const hata = document.getElementById('hata');
+  hata.style.display = 'none';
+  if (!u || !p) { hata.textContent = 'Kullanıcı adı ve şifre gerekli.'; hata.style.display = 'block'; return; }
+  const res = await fetch('/api/login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({username:u,password:p}) });
+  const data = await res.json();
+  if (data.ok) window.location.href = '/app.html';
+  else { hata.textContent = data.error || 'Giriş başarısız.'; hata.style.display = 'block'; }
+}
+</script>
+</body>
+</html>
